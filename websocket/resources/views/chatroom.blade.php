@@ -59,6 +59,9 @@
         .text{
             word-wrap: anywhere;
         }
+        .system .text{
+            text-align:center;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +70,7 @@
             <ul id="chatList"></ul>
             <div id="typing">
                 <input type="text" id="message" placeholder="請輸入訊息" autofocus>
-                <input type="submit" value="送出" onclick="sendMessasge(); ">
+                <input type="submit" value="送出" onclick="send('message'); ">
             </div>
         </div>
     </div>
@@ -88,6 +91,7 @@
 
         websocket.onopen = function (event) {
             console.log('WebSocket Connection ok!');
+            send('login');
         };
 
         websocket.onclose = function (event) {
@@ -118,36 +122,55 @@
             return strTime;
         };
 
-        const sendMessasge = function (){
-            let message = document.getElementById("message").value;
-            if(message){
-                let packet={};
-                packet.type="message";
-                packet.message=message;
-                packet.id=uuid;
-                packet.timeStamp=formatAMPM(new Date);
-                packet.name=name;
-                packeted=JSON.stringify(packet)
-                websocket.send(packeted);
-                document.getElementById("message").value='';
-            };
+        const send = function (type){
+            const packet={};
+            switch (type) {
+                case 'message':
+                    let message = document.getElementById("message").value;
+                    if(message){
+                        packet.type="message";
+                        packet.message=message;
+                        packet.id=uuid;
+                        packet.timeStamp=formatAMPM(new Date);
+                        packet.name=name;
+                        document.getElementById("message").value='';
+                    };
+                    break;
+
+                case 'login':
+                    packet.type="login";
+                    packet.message=`${name} join chat!`;
+                    packet.timeStamp=formatAMPM(new Date);
+                    break;
+            }
+            packeted=JSON.stringify(packet);
+            websocket.send(packeted);
         };
 
         document.onkeypress = function (e) {
-            if (e.keyCode == 13) sendMessasge();
+            if (e.keyCode == 13) send('message');
         };
 
         const appendMessage = function (data){
             let chatList = document.getElementById('chatList');
-            let from = uuid === data.id ? "fromMe" : "fromGuest";
+            let className='';
 
+            switch (data.type) {
+                case 'message':
+                    let from = uuid === data.id ? "fromMe" : "fromGuest";
+                    className=from;
+                    break;
+                case 'login':
+                    className='system';
+                    break;
+            }
             chatList.innerHTML+=`
-                <li class="${from}">
+                <li class='${className}'>
                     <p class="text">
                         ${data.message}
                     </p>
                 </li>
-            `
+            `;
         };
 
     </script>

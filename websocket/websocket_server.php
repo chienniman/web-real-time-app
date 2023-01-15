@@ -21,7 +21,7 @@ $ws_worker->onMessage = function ($connection, $data) use ($ws_worker) {
 };
  
 $ws_worker->onClose = function ($connection) {
-    echo "連線已關閉\n";
+    echo "Websocket connection close!\n";
 };
 
 Worker::runAll();
