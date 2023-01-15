@@ -50,7 +50,8 @@
             flex:1;
         }
         .fromMe,.fromGuest{
-            margin-top:10px;
+            position:relative;
+            margin-top:15px;
             display:flex;
             border-radius:20px;
         }
@@ -65,10 +66,28 @@
             color: black;
             background: #dfdcdc;
         }
+        .timeStamp{
+            white-space: nowrap;
+            color: gray;
+            position: absolute;
+            font-size: 8px;
+            left: 50%;
+            top: -15px;
+            transform:translateX(-50%);
+        }
         .text{
             width:100%;
-            margin:5px;
+            margin:0px;
             word-wrap: anywhere;
+        }
+        .fromMe .text{
+            padding-left:10px;
+        }
+        .fromGuest .text{ 
+            padding-right:10px;
+        }
+        .system{
+            margin-bottom:30px;
         }
         .system .text{
             color:gray;
@@ -80,6 +99,7 @@
             height: 50px;
             border-radius: 50%;
         }
+
     </style>
 </head>
 <body>
@@ -182,6 +202,9 @@
                     chatList.innerHTML+=`
                         <li class='${className}'>
                             <img src="{{ asset('${from}.png') }}"alt="Avatar" class="avatar">
+                                <span class="timeStamp">
+                                    ${data.timeStamp}
+                                </span>
                                 <p class="text">
                                     ${data.message}
                                 </p>
