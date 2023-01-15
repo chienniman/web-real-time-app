@@ -50,17 +50,35 @@
             flex:1;
         }
         .fromMe,.fromGuest{
+            margin-top:10px;
             display:flex;
-            padding:5px 0;
+            border-radius:20px;
         }
         .fromMe{
-            flex-direction:row-reverse
+            flex-direction:row-reverse;
+            text-align:left;
+            background: #00D025;
+            color:white;
+        }
+        .fromGuest{
+            text-align: right;
+            color: black;
+            background: #dfdcdc;
         }
         .text{
+            width:100%;
+            margin:5px;
             word-wrap: anywhere;
         }
         .system .text{
+            color:gray;
             text-align:center;
+        }
+        .avatar {
+            vertical-align: middle;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -133,22 +151,23 @@
                         packet.id=uuid;
                         packet.timeStamp=formatAMPM(new Date);
                         packet.name=name;
+                        packeted=JSON.stringify(packet);
+                        websocket.send(packeted);
                         document.getElementById("message").value='';
                     };
                     break;
-
                 case 'login':
                     packet.type="login";
                     packet.message=`${name} join chat!`;
                     packet.timeStamp=formatAMPM(new Date);
+                    packeted=JSON.stringify(packet);
+                    websocket.send(packeted);
                     break;
             }
-            packeted=JSON.stringify(packet);
-            websocket.send(packeted);
         };
 
         document.onkeypress = function (e) {
-            if (e.keyCode == 13) send('message');
+            if (e.keyCode == 13 && document.getElementById("message").value) send('message');
         };
 
         const appendMessage = function (data){
@@ -159,18 +178,27 @@
                 case 'message':
                     let from = uuid === data.id ? "fromMe" : "fromGuest";
                     className=from;
+
+                    chatList.innerHTML+=`
+                        <li class='${className}'>
+                            <img src="{{ asset('${from}.png') }}"alt="Avatar" class="avatar">
+                                <p class="text">
+                                    ${data.message}
+                                </p>
+                        </li>
+                    `;
                     break;
                 case 'login':
-                    className='system';
+
+                    chatList.innerHTML+=`
+                    <li class='system'>
+                        <p class="text">
+                            ${data.message}
+                        </p>
+                    </li>
+                    `;
                     break;
-            }
-            chatList.innerHTML+=`
-                <li class='${className}'>
-                    <p class="text">
-                        ${data.message}
-                    </p>
-                </li>
-            `;
+            };
         };
 
     </script>
