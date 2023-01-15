@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        #send{
+            width:200px;
+            line-height:50px;
+            padding:20px;
+            border:2px blue solid;
+            margin-right:10px;
+            float:left;
+            display:inline;
+        }
+        #receive{
+            width:200px;
+            line-height:50px;
+            padding:20px;
+            border:2px green solid;
+            float:left;
+            display:inline;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" id="message" placeholder="請輸入訊息" autofocus>
+        <input type="submit" value="發出訊息" onclick="send_messasge(); ">
+    </div>
+    <hr>
+    <div id="send" class="send">
+        您發出的訊息：<hr>        
+    </div>
+    <div id="receive" class="receive">
+        接收到的訊息：<hr>
+    </div>
+    <script>
+        // 指定WebSocket Server 位址
+        var wsServer = 'ws://127.0.0.1:8005';
+        // 建立WebSocket伺服器物件，並連接至WebSocket伺服器
+        var websocket = new WebSocket(wsServer);
+        
+        // 當成功連接到WebSocket伺服器後執行的函數
+        websocket.onopen = function (event) {
+            // console.log("成功連接到 WebSocket 服務");
+            append_element('receive', '成功連接到 WebSocket 服務');
+        };
+        
+        // 當客戶端與WebSocket伺服端關閉連接後執行的函數
+        websocket.onclose = function (event) {
+            // console.log("關閉連接 WebSocket 服務");
+            append_element('receive', '關閉連接 WebSocket 服務');
+        };
+        
+        // 當客戶端接收到訊息後執行的函數
+        websocket.onmessage = function (event) {
+            // console.log('伺服器顯示:' + event.data);
+            append_element('receive', event.data);
+        };
+        
+        // 當客戶端或伺服端發生問題時執行的函數(例如：無法連線至WebSocket伺服器)
+        websocket.onerror = function (event, error) {
+            // console.log('發生錯誤: ' + event.data);
+            append_element('receive', event.data);
+        };
+
+        // 透過websocket物件，將訊息發送給所有人
+        const send_messasge = function (){
+            var message = document.getElementById("message").value;
+            document.getElementById("message").value="";
+            // var msg = JSON.stringify({ // 發送的訊息使用JSON格式
+            //     message: '你好，我是' + message,
+            // })
+            var msg = message;
+            append_element('send', msg);
+            websocket.send(msg);
+        };
+
+        const append_element = function (ele_id, data){
+            var parent = document.getElementById(ele_id);
+            // new element
+            var p = document.createElement("p");
+            p.innerText = "> " + data;
+            parent.appendChild(p);
+        };
+
+    </script>
+</body>
+</html>
