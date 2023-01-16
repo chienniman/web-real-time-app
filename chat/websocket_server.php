@@ -43,6 +43,7 @@ $ws_worker->onMessage = function ($connection, $data) use ($ws_worker) {
 
 $ws_worker->onClose = function ($connection) {
     $quit = array(
+        'type'=>'logout',
         'name'=>$connection->name,
         'message'=>$connection->name.' left the chat!'
     ); 

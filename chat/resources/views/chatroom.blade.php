@@ -88,7 +88,7 @@
             padding-right:10px;
         }
         .system{
-            margin-bottom:30px;
+            margin:20px;
         }
         .system .text{
             color:gray;
@@ -200,7 +200,6 @@
                 case 'message':
                     let from = uuid === data.id ? "fromMe" : "fromGuest";
                     className=from;
-
                     chatList.innerHTML+=`
                         <li class='${className}'>
                             <img src="{{ asset('${from}.png') }}"alt="Avatar" class="avatar">
@@ -214,7 +213,15 @@
                     `;
                     break;
                 case 'login':
-
+                    chatList.innerHTML+=`
+                    <li class='system'>
+                        <p class="text">
+                            ${data.message}
+                        </p>
+                    </li>
+                    `;
+                    break;
+                case 'logout':
                     chatList.innerHTML+=`
                     <li class='system'>
                         <p class="text">
