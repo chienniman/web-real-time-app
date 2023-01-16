@@ -50,6 +50,7 @@
             flex:1;
         }
         .fromMe,.fromGuest{
+            min-height: 30px;
             position:relative;
             margin-top:15px;
             display:flex;
@@ -58,7 +59,7 @@
         .fromMe{
             flex-direction:row-reverse;
             text-align:left;
-            background: #00D025;
+            background: #00A399;
             color:white;
         }
         .fromGuest{
@@ -91,7 +92,7 @@
             margin:20px;
         }
         .system .text{
-            color:gray;
+            color:green;
             text-align:center;
         }
         .avatar {
@@ -100,7 +101,15 @@
             height: 30px;
             border-radius: 50%;
         }
-
+        .user{
+            font-size:8px;
+            bottom: -15px;
+            position: absolute;
+            color: gray;
+            max-width: 60px;
+            white-space:nowrap;
+            overflow:hidden;
+        }
     </style>
 </head>
 <body>
@@ -209,6 +218,9 @@
                                 <p class="text">
                                     ${data.message}
                                 </p>
+                            <span class="user">
+                                ${data.name}
+                            </span>
                         </li>
                     `;
                     break;
