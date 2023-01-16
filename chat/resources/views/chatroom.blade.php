@@ -96,8 +96,8 @@
         }
         .avatar {
             vertical-align: middle;
-            width: 50px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
         }
 
@@ -179,6 +179,7 @@
                     break;
                 case 'login':
                     packet.type="login";
+                    packet.name=name;
                     packet.message=`${name} join chat!`;
                     packet.timeStamp=formatAMPM(new Date);
                     packeted=JSON.stringify(packet);

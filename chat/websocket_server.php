@@ -5,7 +5,7 @@ use Workerman\Worker;
 use Channel\Client;
 use Workerman\Timer;
 
-define('HEARTBEAT_TIME', 55);
+define('HEARTBEAT_TIME', 5);
 
 $ws_worker = new Worker("websocket://127.0.0.1:8005");
  
@@ -36,11 +36,18 @@ $ws_worker->onWorkerStart = function ($worker) {
  
 $ws_worker->onMessage = function ($connection, $data) use ($ws_worker) {
     $connection->lastMessageTime = time();
+    $connection->name = json_decode($data)->name;
+
     Channel\Client::publish('broadcast', $data);
 };
- 
+
 $ws_worker->onClose = function ($connection) {
-    echo "Websocket connection close!\n".time();
+    $quit = array(
+        'name'=>$connection->name,
+        'message'=>$connection->name.' left the chat!'
+    ); 
+    Channel\Client::publish('broadcast', json_encode($quit));
+    echo $connection->name."Websocket connection close!\n".date("Y-m-d h:i:sa", time()).PHP_EOL;
 };
 
 Worker::runAll();
