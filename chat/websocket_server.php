@@ -43,7 +43,7 @@ $ws_worker->onMessage = function ($connection, $data) use ($ws_worker) {
 $ws_worker->onClose = function ($connection) {
     $quit = array(
         'type'=>'logout',
-        'name'=>$connection->name,
+        'name'=>$connection->name || 'Anonymous',
         'message'=>$connection->name.' left the chat!'
     ); 
     Channel\Client::publish('broadcast', json_encode($quit));
