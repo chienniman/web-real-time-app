@@ -35,7 +35,7 @@
             bottom: 95px;
             transform: translateX(-50%);
             border-radius: 10px 10px 0 0;
-            background: ghostwhite;
+            background: rgb(26, 28, 29);
         }
         #chatList{
             padding: 15px 20px 0 20px;
@@ -144,6 +144,12 @@
 
         websocket.onclose = function (event) {
             console.log('WebSocket Close');
+            chatList.innerHTML+=`
+                    <li class='system'>
+                        <p class="text">
+                            Removed from group conversation for being idle
+                        </p>
+                    </li>`;
         };
 
         websocket.onmessage = function (event) {
