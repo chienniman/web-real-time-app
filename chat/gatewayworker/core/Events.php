@@ -11,6 +11,10 @@ class Events
         )));
     }
 
+    public static function onMessage($client_id, $message)
+    {
+
+    }
     public static function onClose($client_id)
     {
         $room_id = $_SESSION['room_id'];
